@@ -26,7 +26,7 @@ public class UserService {
     RoleRepository roleRepository;
 
     @WithTransaction
-    public Uni<User> createUser(User user, String rawPassword, List<String> roles) {
+    public Uni<User> createUser(User user) {
         return roleRepository.findByNames(user.getRoles())
                 .flatMap(roleEntities -> {
                     if (roleEntities.isEmpty()) {
@@ -37,6 +37,17 @@ public class UserService {
                 })
                 .flatMap(userRepository::persistAndFlush)
                 .map(userMapper::toDomain);
+    }
+
+    public Uni<Boolean> existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+    public Uni<User> findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .onItem()
+                .ifNotNull()
+                .transform(userMapper::toDomain);
     }
 
     private UserEntity toEntity(User user, List<RoleEntity> roleEntities) {
