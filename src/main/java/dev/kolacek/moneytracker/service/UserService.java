@@ -39,10 +39,14 @@ public class UserService {
                 .map(userMapper::toDomain);
     }
 
+
+    @WithTransaction
     public Uni<Boolean> existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
+
+    @WithTransaction
     public Uni<User> findByEmail(String email) {
         return userRepository.findByEmail(email)
                 .onItem()

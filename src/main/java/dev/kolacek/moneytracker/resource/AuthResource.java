@@ -37,7 +37,6 @@ public class AuthResource {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    @WithTransaction
     public Uni<Response> register(@FormParam("email") String email,
                                   @FormParam("password") String password,
                                   @FormParam("roles") String roles) {
@@ -77,7 +76,6 @@ public class AuthResource {
     @Path("/profile")
     @Produces(MediaType.TEXT_HTML)
     @Authenticated
-    @WithTransaction
     public Uni<TemplateInstance> profilePage(@Context SecurityContext securityContext) {
         String username = securityContext.getUserPrincipal().getName();
         return userService.findByEmail(username)
